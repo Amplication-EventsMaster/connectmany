@@ -1,0 +1,26 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Customer {
+  createdAt      DateTime @default(now())
+  favoriteColors Color[]  @relation(name: "customers")
+  id             String   @id @default(cuid())
+  likedColors    Color[]  @relation(name: "ColorLikedColorsCustomerLikedColors")
+  updatedAt      DateTime @updatedAt
+}
+
+model Color {
+  createdAt     DateTime  @default(now())
+  customers     Customer? @relation(name: "customers", fields: [customersId], references: [id])
+  customersId   String?
+  id            String    @id @default(cuid())
+  likedColors   Customer? @relation(name: "ColorLikedColorsCustomerLikedColors", fields: [likedColorsId], references: [id])
+  likedColorsId String?
+  updatedAt     DateTime  @updatedAt
+}
