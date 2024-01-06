@@ -14,7 +14,8 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
   Prisma,
   Customer, // @ts-ignore
-  Color,
+  Color, // @ts-ignore
+  User,
 } from "@prisma/client";
 
 export class CustomerServiceBase {
@@ -72,5 +73,13 @@ export class CustomerServiceBase {
         where: { id: parentId },
       })
       .likedColors(args);
+  }
+
+  async getUser(parentId: string): Promise<User | null> {
+    return this.prisma.customer
+      .findUnique({
+        where: { id: parentId },
+      })
+      .user();
   }
 }

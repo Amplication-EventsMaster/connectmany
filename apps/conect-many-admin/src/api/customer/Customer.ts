@@ -1,4 +1,5 @@
 import { Color } from "../color/Color";
+import { User } from "../user/User";
 
 export type Customer = {
   createdAt: Date;
@@ -6,4 +7,5 @@ export type Customer = {
   id: string;
   likedColors?: Array<Color>;
   updatedAt: Date;
+  user?: User | null;
 };

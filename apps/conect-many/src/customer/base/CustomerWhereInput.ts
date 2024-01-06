@@ -15,6 +15,7 @@ import { ColorListRelationFilter } from "../../color/base/ColorListRelationFilte
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
 import { StringFilter } from "../../util/StringFilter";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
 class CustomerWhereInput {
@@ -52,6 +53,18 @@ class CustomerWhereInput {
     nullable: true,
   })
   likedColors?: ColorListRelationFilter;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => UserWhereUniqueInput)
+  @IsOptional()
+  @Field(() => UserWhereUniqueInput, {
+    nullable: true,
+  })
+  user?: UserWhereUniqueInput;
 }
 
 export { CustomerWhereInput as CustomerWhereInput };

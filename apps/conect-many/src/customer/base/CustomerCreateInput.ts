@@ -14,6 +14,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { ColorCreateNestedManyWithoutCustomersInput } from "./ColorCreateNestedManyWithoutCustomersInput";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 @InputType()
 class CustomerCreateInput {
@@ -40,6 +41,18 @@ class CustomerCreateInput {
     nullable: true,
   })
   likedColors?: ColorCreateNestedManyWithoutCustomersInput;
+
+  @ApiProperty({
+    required: false,
+    type: () => UserWhereUniqueInput,
+  })
+  @ValidateNested()
+  @Type(() => UserWhereUniqueInput)
+  @IsOptional()
+  @Field(() => UserWhereUniqueInput, {
+    nullable: true,
+  })
+  user?: UserWhereUniqueInput | null;
 }
 
 export { CustomerCreateInput as CustomerCreateInput };
