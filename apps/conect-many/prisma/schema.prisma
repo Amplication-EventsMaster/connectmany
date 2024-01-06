@@ -24,3 +24,14 @@ model Color {
   likedColorsId String?
   updatedAt     DateTime  @updatedAt
 }
+
+model User {
+  createdAt DateTime @default(now())
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}

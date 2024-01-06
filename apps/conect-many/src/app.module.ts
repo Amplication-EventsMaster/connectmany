@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { CustomerModule } from "./customer/customer.module";
 import { ColorModule } from "./color/color.module";
+import { UserModule } from "./user/user.module";
 import { HealthModule } from "./health/health.module";
 import { PrismaModule } from "./prisma/prisma.module";
 import { SecretsManagerModule } from "./providers/secrets/secretsManager.module";
@@ -15,6 +16,7 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
   imports: [
     CustomerModule,
     ColorModule,
+    UserModule,
     HealthModule,
     PrismaModule,
     SecretsManagerModule,

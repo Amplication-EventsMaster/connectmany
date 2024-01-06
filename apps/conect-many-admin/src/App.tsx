@@ -13,6 +13,10 @@ import { ColorList } from "./color/ColorList";
 import { ColorCreate } from "./color/ColorCreate";
 import { ColorEdit } from "./color/ColorEdit";
 import { ColorShow } from "./color/ColorShow";
+import { UserList } from "./user/UserList";
+import { UserCreate } from "./user/UserCreate";
+import { UserEdit } from "./user/UserEdit";
+import { UserShow } from "./user/UserShow";
 import { jwtAuthProvider } from "./auth-provider/ra-auth-jwt";
 
 const App = (): React.ReactElement => {
@@ -52,6 +56,13 @@ const App = (): React.ReactElement => {
           edit={ColorEdit}
           create={ColorCreate}
           show={ColorShow}
+        />
+        <Resource
+          name="User"
+          list={UserList}
+          edit={UserEdit}
+          create={UserCreate}
+          show={UserShow}
         />
       </Admin>
     </div>
