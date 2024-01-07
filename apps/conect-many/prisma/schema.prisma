@@ -8,13 +8,13 @@ generator client {
 }
 
 model Customer {
+  cities         City[]
   createdAt      DateTime @default(now())
   favoriteColors Color[]  @relation(name: "favoriteColors")
   id             String   @id @default(cuid())
   likedColors    Color[]  @relation(name: "ColorLikedColorsCustomerLikedColors")
   updatedAt      DateTime @updatedAt
-  user           User?    @relation(fields: [userId], references: [id])
-  userId         String?
+  user           User[]
 }
 
 model Color {
@@ -28,13 +28,22 @@ model Color {
 }
 
 model User {
-  createdAt DateTime   @default(now())
-  customers Customer[]
-  firstName String?
-  id        String     @id @default(cuid())
-  lastName  String?
-  password  String
-  roles     Json
-  updatedAt DateTime   @updatedAt
-  username  String     @unique
+  createdAt   DateTime  @default(now())
+  customers   Customer? @relation(fields: [customersId], references: [id])
+  customersId String?
+  firstName   String?
+  id          String    @id @default(cuid())
+  lastName    String?
+  password    String
+  roles       Json
+  updatedAt   DateTime  @updatedAt
+  username    String    @unique
+}
+
+model City {
+  createdAt  DateTime  @default(now())
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+  id         String    @id @default(cuid())
+  updatedAt  DateTime  @updatedAt
 }

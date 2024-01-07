@@ -10,37 +10,37 @@ https://docs.amplication.com/how-to/custom-code
 ------------------------------------------------------------------------------
   */
 import { InputType, Field } from "@nestjs/graphql";
-import { CustomerWhereUniqueInput } from "../../customer/base/CustomerWhereUniqueInput";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 import { ApiProperty } from "@nestjs/swagger";
 
 @InputType()
-class CustomerUpdateManyWithoutUsersInput {
-  @Field(() => [CustomerWhereUniqueInput], {
+class UserUpdateManyWithoutCustomersInput {
+  @Field(() => [UserWhereUniqueInput], {
     nullable: true,
   })
   @ApiProperty({
     required: false,
-    type: () => [CustomerWhereUniqueInput],
+    type: () => [UserWhereUniqueInput],
   })
-  connect?: Array<CustomerWhereUniqueInput>;
+  connect?: Array<UserWhereUniqueInput>;
 
-  @Field(() => [CustomerWhereUniqueInput], {
+  @Field(() => [UserWhereUniqueInput], {
     nullable: true,
   })
   @ApiProperty({
     required: false,
-    type: () => [CustomerWhereUniqueInput],
+    type: () => [UserWhereUniqueInput],
   })
-  disconnect?: Array<CustomerWhereUniqueInput>;
+  disconnect?: Array<UserWhereUniqueInput>;
 
-  @Field(() => [CustomerWhereUniqueInput], {
+  @Field(() => [UserWhereUniqueInput], {
     nullable: true,
   })
   @ApiProperty({
     required: false,
-    type: () => [CustomerWhereUniqueInput],
+    type: () => [UserWhereUniqueInput],
   })
-  set?: Array<CustomerWhereUniqueInput>;
+  set?: Array<UserWhereUniqueInput>;
 }
 
-export { CustomerUpdateManyWithoutUsersInput as CustomerUpdateManyWithoutUsersInput };
+export { UserUpdateManyWithoutCustomersInput as UserUpdateManyWithoutCustomersInput };

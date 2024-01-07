@@ -11,13 +11,26 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { ColorUpdateManyWithoutCustomersInput } from "./ColorUpdateManyWithoutCustomersInput";
+import { CityUpdateManyWithoutCustomersInput } from "./CityUpdateManyWithoutCustomersInput";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { ColorUpdateManyWithoutCustomersInput } from "./ColorUpdateManyWithoutCustomersInput";
+import { UserUpdateManyWithoutCustomersInput } from "./UserUpdateManyWithoutCustomersInput";
 
 @InputType()
 class CustomerUpdateInput {
+  @ApiProperty({
+    required: false,
+    type: () => CityUpdateManyWithoutCustomersInput,
+  })
+  @ValidateNested()
+  @Type(() => CityUpdateManyWithoutCustomersInput)
+  @IsOptional()
+  @Field(() => CityUpdateManyWithoutCustomersInput, {
+    nullable: true,
+  })
+  cities?: CityUpdateManyWithoutCustomersInput;
+
   @ApiProperty({
     required: false,
     type: () => ColorUpdateManyWithoutCustomersInput,
@@ -44,15 +57,15 @@ class CustomerUpdateInput {
 
   @ApiProperty({
     required: false,
-    type: () => UserWhereUniqueInput,
+    type: () => UserUpdateManyWithoutCustomersInput,
   })
   @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
+  @Type(() => UserUpdateManyWithoutCustomersInput)
   @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
+  @Field(() => UserUpdateManyWithoutCustomersInput, {
     nullable: true,
   })
-  user?: UserWhereUniqueInput | null;
+  user?: UserUpdateManyWithoutCustomersInput;
 }
 
 export { CustomerUpdateInput as CustomerUpdateInput };

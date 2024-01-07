@@ -20,8 +20,11 @@ import { CustomerFindUniqueArgs } from "./CustomerFindUniqueArgs";
 import { CreateCustomerArgs } from "./CreateCustomerArgs";
 import { UpdateCustomerArgs } from "./UpdateCustomerArgs";
 import { DeleteCustomerArgs } from "./DeleteCustomerArgs";
+import { CityFindManyArgs } from "../../city/base/CityFindManyArgs";
+import { City } from "../../city/base/City";
 import { ColorFindManyArgs } from "../../color/base/ColorFindManyArgs";
 import { Color } from "../../color/base/Color";
+import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
 import { User } from "../../user/base/User";
 import { CustomerService } from "../customer.service";
 @graphql.Resolver(() => Customer)
@@ -61,15 +64,7 @@ export class CustomerResolverBase {
   ): Promise<Customer> {
     return await this.service.createCustomer({
       ...args,
-      data: {
-        ...args.data,
-
-        user: args.data.user
-          ? {
-              connect: args.data.user,
-            }
-          : undefined,
-      },
+      data: args.data,
     });
   }
 
@@ -80,15 +75,7 @@ export class CustomerResolverBase {
     try {
       return await this.service.updateCustomer({
         ...args,
-        data: {
-          ...args.data,
-
-          user: args.data.user
-            ? {
-                connect: args.data.user,
-              }
-            : undefined,
-        },
+        data: args.data,
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -114,6 +101,20 @@ export class CustomerResolverBase {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [City], { name: "cities" })
+  async findCities(
+    @graphql.Parent() parent: Customer,
+    @graphql.Args() args: CityFindManyArgs
+  ): Promise<City[]> {
+    const results = await this.service.findCities(parent.id, args);
+
+    if (!results) {
+      return [];
+    }
+
+    return results;
   }
 
   @graphql.ResolveField(() => [Color], { name: "favoriteColors" })
@@ -144,16 +145,17 @@ export class CustomerResolverBase {
     return results;
   }
 
-  @graphql.ResolveField(() => User, {
-    nullable: true,
-    name: "user",
-  })
-  async getUser(@graphql.Parent() parent: Customer): Promise<User | null> {
-    const result = await this.service.getUser(parent.id);
+  @graphql.ResolveField(() => [User], { name: "user" })
+  async findUser(
+    @graphql.Parent() parent: Customer,
+    @graphql.Args() args: UserFindManyArgs
+  ): Promise<User[]> {
+    const results = await this.service.findUser(parent.id, args);
 
-    if (!result) {
-      return null;
+    if (!results) {
+      return [];
     }
-    return result;
+
+    return results;
   }
 }

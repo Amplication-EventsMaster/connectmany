@@ -1,8 +1,8 @@
-import { CustomerUpdateManyWithoutUsersInput } from "./CustomerUpdateManyWithoutUsersInput";
+import { CustomerWhereUniqueInput } from "../customer/CustomerWhereUniqueInput";
 import { InputJsonValue } from "../../types";
 
 export type UserUpdateInput = {
-  customers?: CustomerUpdateManyWithoutUsersInput;
+  customers?: CustomerWhereUniqueInput | null;
   firstName?: string | null;
   lastName?: string | null;
   password?: string;

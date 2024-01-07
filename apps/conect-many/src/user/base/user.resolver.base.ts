@@ -20,7 +20,6 @@ import { UserFindUniqueArgs } from "./UserFindUniqueArgs";
 import { CreateUserArgs } from "./CreateUserArgs";
 import { UpdateUserArgs } from "./UpdateUserArgs";
 import { DeleteUserArgs } from "./DeleteUserArgs";
-import { CustomerFindManyArgs } from "../../customer/base/CustomerFindManyArgs";
 import { Customer } from "../../customer/base/Customer";
 import { UserService } from "../user.service";
 @graphql.Resolver(() => User)
@@ -54,7 +53,15 @@ export class UserResolverBase {
   async createUser(@graphql.Args() args: CreateUserArgs): Promise<User> {
     return await this.service.createUser({
       ...args,
-      data: args.data,
+      data: {
+        ...args.data,
+
+        customers: args.data.customers
+          ? {
+              connect: args.data.customers,
+            }
+          : undefined,
+      },
     });
   }
 
@@ -63,7 +70,15 @@ export class UserResolverBase {
     try {
       return await this.service.updateUser({
         ...args,
-        data: args.data,
+        data: {
+          ...args.data,
+
+          customers: args.data.customers
+            ? {
+                connect: args.data.customers,
+              }
+            : undefined,
+        },
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -89,17 +104,16 @@ export class UserResolverBase {
     }
   }
 
-  @graphql.ResolveField(() => [Customer], { name: "customers" })
-  async findCustomers(
-    @graphql.Parent() parent: User,
-    @graphql.Args() args: CustomerFindManyArgs
-  ): Promise<Customer[]> {
-    const results = await this.service.findCustomers(parent.id, args);
+  @graphql.ResolveField(() => Customer, {
+    nullable: true,
+    name: "customers",
+  })
+  async getCustomers(@graphql.Parent() parent: User): Promise<Customer | null> {
+    const result = await this.service.getCustomers(parent.id);
 
-    if (!results) {
-      return [];
+    if (!result) {
+      return null;
     }
-
-    return results;
+    return result;
   }
 }

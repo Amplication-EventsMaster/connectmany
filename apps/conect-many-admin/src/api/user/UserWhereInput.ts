@@ -1,9 +1,9 @@
-import { CustomerListRelationFilter } from "../customer/CustomerListRelationFilter";
+import { CustomerWhereUniqueInput } from "../customer/CustomerWhereUniqueInput";
 import { StringNullableFilter } from "../../util/StringNullableFilter";
 import { StringFilter } from "../../util/StringFilter";
 
 export type UserWhereInput = {
-  customers?: CustomerListRelationFilter;
+  customers?: CustomerWhereUniqueInput;
   firstName?: StringNullableFilter;
   id?: StringFilter;
   lastName?: StringNullableFilter;

@@ -14,6 +14,7 @@ import { PrismaService } from "../../prisma/prisma.service";
 import {
   Prisma,
   Customer, // @ts-ignore
+  City, // @ts-ignore
   Color, // @ts-ignore
   User,
 } from "@prisma/client";
@@ -53,6 +54,17 @@ export class CustomerServiceBase {
     return this.prisma.customer.delete(args);
   }
 
+  async findCities(
+    parentId: string,
+    args: Prisma.CityFindManyArgs
+  ): Promise<City[]> {
+    return this.prisma.customer
+      .findUniqueOrThrow({
+        where: { id: parentId },
+      })
+      .cities(args);
+  }
+
   async findFavoriteColors(
     parentId: string,
     args: Prisma.ColorFindManyArgs
@@ -75,11 +87,14 @@ export class CustomerServiceBase {
       .likedColors(args);
   }
 
-  async getUser(parentId: string): Promise<User | null> {
+  async findUser(
+    parentId: string,
+    args: Prisma.UserFindManyArgs
+  ): Promise<User[]> {
     return this.prisma.customer
-      .findUnique({
+      .findUniqueOrThrow({
         where: { id: parentId },
       })
-      .user();
+      .user(args);
   }
 }

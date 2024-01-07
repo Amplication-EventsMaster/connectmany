@@ -1,8 +1,8 @@
-import { CustomerCreateNestedManyWithoutUsersInput } from "./CustomerCreateNestedManyWithoutUsersInput";
+import { CustomerWhereUniqueInput } from "../customer/CustomerWhereUniqueInput";
 import { InputJsonValue } from "../../types";
 
 export type UserCreateInput = {
-  customers?: CustomerCreateNestedManyWithoutUsersInput;
+  customers?: CustomerWhereUniqueInput | null;
   firstName?: string | null;
   lastName?: string | null;
   password: string;

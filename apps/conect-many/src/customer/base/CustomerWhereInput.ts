@@ -11,14 +11,27 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { ColorListRelationFilter } from "../../color/base/ColorListRelationFilter";
+import { CityListRelationFilter } from "../../city/base/CityListRelationFilter";
 import { ValidateNested, IsOptional } from "class-validator";
 import { Type } from "class-transformer";
+import { ColorListRelationFilter } from "../../color/base/ColorListRelationFilter";
 import { StringFilter } from "../../util/StringFilter";
-import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
+import { UserListRelationFilter } from "../../user/base/UserListRelationFilter";
 
 @InputType()
 class CustomerWhereInput {
+  @ApiProperty({
+    required: false,
+    type: () => CityListRelationFilter,
+  })
+  @ValidateNested()
+  @Type(() => CityListRelationFilter)
+  @IsOptional()
+  @Field(() => CityListRelationFilter, {
+    nullable: true,
+  })
+  cities?: CityListRelationFilter;
+
   @ApiProperty({
     required: false,
     type: () => ColorListRelationFilter,
@@ -56,15 +69,15 @@ class CustomerWhereInput {
 
   @ApiProperty({
     required: false,
-    type: () => UserWhereUniqueInput,
+    type: () => UserListRelationFilter,
   })
   @ValidateNested()
-  @Type(() => UserWhereUniqueInput)
+  @Type(() => UserListRelationFilter)
   @IsOptional()
-  @Field(() => UserWhereUniqueInput, {
+  @Field(() => UserListRelationFilter, {
     nullable: true,
   })
-  user?: UserWhereUniqueInput;
+  user?: UserListRelationFilter;
 }
 
 export { CustomerWhereInput as CustomerWhereInput };

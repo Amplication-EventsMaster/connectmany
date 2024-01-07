@@ -22,9 +22,15 @@ import { Customer } from "./Customer";
 import { CustomerFindManyArgs } from "./CustomerFindManyArgs";
 import { CustomerWhereUniqueInput } from "./CustomerWhereUniqueInput";
 import { CustomerUpdateInput } from "./CustomerUpdateInput";
+import { CityFindManyArgs } from "../../city/base/CityFindManyArgs";
+import { City } from "../../city/base/City";
+import { CityWhereUniqueInput } from "../../city/base/CityWhereUniqueInput";
 import { ColorFindManyArgs } from "../../color/base/ColorFindManyArgs";
 import { Color } from "../../color/base/Color";
 import { ColorWhereUniqueInput } from "../../color/base/ColorWhereUniqueInput";
+import { UserFindManyArgs } from "../../user/base/UserFindManyArgs";
+import { User } from "../../user/base/User";
+import { UserWhereUniqueInput } from "../../user/base/UserWhereUniqueInput";
 
 export class CustomerControllerBase {
   constructor(protected readonly service: CustomerService) {}
@@ -34,25 +40,11 @@ export class CustomerControllerBase {
     @common.Body() data: CustomerCreateInput
   ): Promise<Customer> {
     return await this.service.createCustomer({
-      data: {
-        ...data,
-
-        user: data.user
-          ? {
-              connect: data.user,
-            }
-          : undefined,
-      },
+      data: data,
       select: {
         createdAt: true,
         id: true,
         updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
   }
@@ -68,12 +60,6 @@ export class CustomerControllerBase {
         createdAt: true,
         id: true,
         updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
   }
@@ -90,12 +76,6 @@ export class CustomerControllerBase {
         createdAt: true,
         id: true,
         updatedAt: true,
-
-        user: {
-          select: {
-            id: true,
-          },
-        },
       },
     });
     if (result === null) {
@@ -116,25 +96,11 @@ export class CustomerControllerBase {
     try {
       return await this.service.updateCustomer({
         where: params,
-        data: {
-          ...data,
-
-          user: data.user
-            ? {
-                connect: data.user,
-              }
-            : undefined,
-        },
+        data: data,
         select: {
           createdAt: true,
           id: true,
           updatedAt: true,
-
-          user: {
-            select: {
-              id: true,
-            },
-          },
         },
       });
     } catch (error) {
@@ -160,12 +126,6 @@ export class CustomerControllerBase {
           createdAt: true,
           id: true,
           updatedAt: true,
-
-          user: {
-            select: {
-              id: true,
-            },
-          },
         },
       });
     } catch (error) {
@@ -176,6 +136,87 @@ export class CustomerControllerBase {
       }
       throw error;
     }
+  }
+
+  @common.Get("/:id/cities")
+  @ApiNestedQuery(CityFindManyArgs)
+  async findCities(
+    @common.Req() request: Request,
+    @common.Param() params: CustomerWhereUniqueInput
+  ): Promise<City[]> {
+    const query = plainToClass(CityFindManyArgs, request.query);
+    const results = await this.service.findCities(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+
+        customer: {
+          select: {
+            id: true,
+          },
+        },
+
+        id: true,
+        updatedAt: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/cities")
+  async connectCities(
+    @common.Param() params: CustomerWhereUniqueInput,
+    @common.Body() body: CityWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      cities: {
+        connect: body,
+      },
+    };
+    await this.service.updateCustomer({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/cities")
+  async updateCities(
+    @common.Param() params: CustomerWhereUniqueInput,
+    @common.Body() body: CityWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      cities: {
+        set: body,
+      },
+    };
+    await this.service.updateCustomer({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/cities")
+  async disconnectCities(
+    @common.Param() params: CustomerWhereUniqueInput,
+    @common.Body() body: CityWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      cities: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateCustomer({
+      where: params,
+      data,
+      select: { id: true },
+    });
   }
 
   @common.Get("/:id/favoriteColors")
@@ -344,6 +385,91 @@ export class CustomerControllerBase {
   ): Promise<void> {
     const data = {
       likedColors: {
+        disconnect: body,
+      },
+    };
+    await this.service.updateCustomer({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Get("/:id/user")
+  @ApiNestedQuery(UserFindManyArgs)
+  async findUser(
+    @common.Req() request: Request,
+    @common.Param() params: CustomerWhereUniqueInput
+  ): Promise<User[]> {
+    const query = plainToClass(UserFindManyArgs, request.query);
+    const results = await this.service.findUser(params.id, {
+      ...query,
+      select: {
+        createdAt: true,
+
+        customers: {
+          select: {
+            id: true,
+          },
+        },
+
+        firstName: true,
+        id: true,
+        lastName: true,
+        roles: true,
+        updatedAt: true,
+        username: true,
+      },
+    });
+    if (results === null) {
+      throw new errors.NotFoundException(
+        `No resource was found for ${JSON.stringify(params)}`
+      );
+    }
+    return results;
+  }
+
+  @common.Post("/:id/user")
+  async connectUser(
+    @common.Param() params: CustomerWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      user: {
+        connect: body,
+      },
+    };
+    await this.service.updateCustomer({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Patch("/:id/user")
+  async updateUser(
+    @common.Param() params: CustomerWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      user: {
+        set: body,
+      },
+    };
+    await this.service.updateCustomer({
+      where: params,
+      data,
+      select: { id: true },
+    });
+  }
+
+  @common.Delete("/:id/user")
+  async disconnectUser(
+    @common.Param() params: CustomerWhereUniqueInput,
+    @common.Body() body: UserWhereUniqueInput[]
+  ): Promise<void> {
+    const data = {
+      user: {
         disconnect: body,
       },
     };
